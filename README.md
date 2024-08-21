@@ -10,14 +10,14 @@ The first one has type T and the second one is an integer.
 Assuming T is a container of integers,
 
 ### what is a container of integers?
-In C++98, std::vector<int> is a container that represents a dynamic array of integers. It's part of the C++ Standard Template Library (STL) and offers a flexible and efficient way to work with collections of integers.  
+In C++98, std::vector<int> is a container that represents a dynamic array of integers. It's part of the C++ Standard Template Library (STL).
 - It can automatically resize itself
 - Elements can be accessed directly using their index.
-- Provides efficient operations like push_back, pop_back, insert, erase, and size
+- Provides operations like push_back, pop_back, insert, erase, and size.
 
 ### implementation
 
-How would we do this function without templates? we would use the vector container and the find algorithm from the <algorithm> header.  
+How would we code this function without templates? we would use the vector container and the `find` algorithm from the <algorithm> header.  
 ```cpp
 #include <vector>
 #include <algorithm>
@@ -29,7 +29,7 @@ std::vector<int>::const_iterator easyfind(const std::vector<int>& container, int
 ```
 `std::find` iterates over the range specified by the iterators and returns an iterator to the first element that matches the value. If the value is not found, it returns `container.end()`.
 
-or using an iterator... but find is more concise.  
+or using an iterator... but I think the previous example is more concise: 
 ```cpp
 std::vector<int>::const_iterator easyfind_int(const std::vector<int>& container, int value) {
     for (std::vector<int>::const_iterator it = container.begin(); it != container.end(); ++it) {
@@ -40,14 +40,15 @@ std::vector<int>::const_iterator easyfind_int(const std::vector<int>& container,
     return container.end();
 }
 ```
-So now we can use templates to make this function work with any type of container and value.  
+#### Using templates
+So now we can use templates to make this function work with any type.  Using find:
 ```cpp
 template <typename T>
 typename std::vector<T>::const_iterator easyfind(const std::vector<T>& container, const T& value) {
     return std::find(container.begin(), container.end(), value);
 }
 ```
-or using an iterator...  
+or using an iterator... :
 ```cpp
 template <typename T>
 typename std::vector<T>::const_iterator easyfind(const std::vector<T>& container, const T& value) {
@@ -169,6 +170,35 @@ int main() {
         std::cout << "No adjacent values found" << std::endl;
     }
 
+	//sort
+	std::sort(numbers.begin(), numbers.end());
     return 0;
+}
+```
+
+A cool thing is to look for adjacent distances in one vector and store them in another vector.
+```cpp
+std::vector<int> find_adjacent_differences(const std::vector<int>& numbers) {
+    std::vector<int> differences;
+
+    std::vector<int>::const_iterator it = std::adjacent_find(numbers.begin(), numbers.end());
+    while (it != numbers.end()) {
+        differences.push_back(std::abs(*it - *(it - 1)));
+        it = std::adjacent_find(it + 1, numbers.end());
+    }
+
+    return differences;
+}
+```
+
+The same thing can be done with adjacent_difference algorithm:
+```cpp
+std::vector<int> find_adjacent_differences(const std::vector<int>& numbers) {
+	std::vector<int> differences(numbers.size());
+
+	std::adjacent_difference(numbers.begin(), numbers.end(), differences.begin());
+	differences.erase(differences.begin());
+
+	return differences;
 }
 ```
