@@ -202,3 +202,100 @@ std::vector<int> find_adjacent_differences(const std::vector<int>& numbers) {
 	return differences;
 }
 ```
+
+## Ex01 - span
+
+We can use the properties of the vector to create a span class which will contains an array of ints and return the largest and shortest spans between any value of the array.
+
+## Ex02 - Mutantstack
+### what is a stack container?
+The `std::stack` container in C++ is a simple data structure that follows the Last-In-First-Out (LIFO) principle. This means that the last element added to the stack is the first one to be removed. It's often used to implement functions like undo/redo, backtracking algorithms, or expression evaluation.  
+### Key characteristics of std::stack:
+- LIFO order: Elements are added and removed in a LIFO manner.
+- Template-based: std::stack is a template container, so you can use it with different data types.
+- Adapter: It's an adapter container, meaning it is built on top of another container (usually `std::deque` or `std::vector`) to provide the stack interface.
+
+Operations:
+- push(value): Adds an element to the top of the stack.
+- top(): Returns a reference to the top element of the stack without removing it.
+- pop(): Removes the top element from the stack.
+- empty(): Returns true if the stack is empty, false otherwise.
+- size(): Returns the number of elements in the stack.
+
+Example:
+```cpp
+#include <stack>
+#include <iostream>
+
+int main() {
+    std::stack<int> myStack;
+
+    // Push elements onto the stack
+    myStack.push(10);
+    myStack.push(20);
+    myStack.push(30);
+
+    // Access the top element
+    std::cout << "Top element: " << myStack.top() << std::endl;
+
+    // Pop elements from the stack
+    myStack.pop();
+    myStack.pop();
+
+    // Check if the stack is empty
+    if (myStack.empty()) {
+        std::cout << "Stack is empty." << std::endl;
+    } else {
+        std::cout << "Stack is not empty." << std::endl;
+    }
+
+    return 0;  
+}
+```
+### The `std::stack` member functions
+Constructors:
+- std::stack(): Constructs an empty stack.
+- std::stack(const Container& c): Constructs a stack from a container (e.g., std::vector, std::deque).
+- std::stack(Container&& c): Constructs a stack from a movable container.
+
+Modifiers:
+- void push(const T& value): Pushes an element onto the top of the stack.
+- void pop(): Removes the top element from the stack.
+- void top(): Returns a reference to the top element of the stack without removing it.
+- void swap(std::stack& other): Exchanges the contents of two stacks.
+
+Capacity:
+- bool empty(): Returns true if the stack is empty, false otherwise.
+- size_type size(): Returns the number of elements in the stack.
+
+
+### The `std::stack` container adapter
+
+The `std::stack` container adapter is a simple wrapper around a container that provides a stack interface. The underlying container can be specified as a template parameter, but the default is `std::deque`. In the same way we can inherit from the stack class and create a new class that will have the same properties as the stack but with some additional methods. In particular we will add the `begin()` and `end()` methods that will return the iterators to the beginning and end of the stack.
+The begin() and end() functions in the MutantStack class provide iterators that allow you to traverse the elements of the stack. These iterators are essentially pointers that point to the current element in the stack.
+
+- begin(): Returns an iterator pointing to the first element (top) of the stack.
+- end(): Returns an iterator pointing to one past the last element of the stack.
+
+You can use these iterators in a loop to access and manipulate the elements of the stack
+The c_ref() function is used by the begin() and end() functions to access the underlying container and retrieve its iterators. By returning a reference to the container, the MutantStack class avoids making a copy of the container, which can be more efficient.
+
+This is the class definition in canonical form. Note that I have access to all stack methods and I can add new methods to the class. Also it is a template class so I can use it with any type of data.
+
+```cpp
+template <typename T>
+class MutantStack: public std::stack<T> {
+	public:
+		MutantStack();
+		~MutantStack();
+		MutantStack(const MutantStack& copy);
+		MutantStack& operator=(const MutantStack& assign);
+
+		typedef typename std::stack<T>::container_type::iterator iterator;
+		iterator begin();
+		iterator end();
+
+	private:
+		typename std::stack<T>::container_type& c_ref();
+};
+```
