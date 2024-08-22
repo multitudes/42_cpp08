@@ -400,3 +400,76 @@ int main() {
     return 0;
 }
 ```
+
+### Look into the stack class in the STL
+Here we can see the stack class in the STL. It is a template class that provides a simple interface for the stack data structure. The stack class is an adapter that wraps an underlying container (by default, std::deque) to provide stack functionality. The stack class does not define any iterators, as it is a simple container adapter that enforces the LIFO (Last-In-First-Out) behavior of a stack.
+
+```cpp
+
+  /**
+   *  @brief  A standard container giving FILO behavior.
+   *
+   *  @ingroup sequences
+   *
+   *  @tparam _Tp  Type of element.
+   *  @tparam _Sequence  Type of underlying sequence, defaults to deque<_Tp>.
+   *
+   *  Meets many of the requirements of a
+   *  <a href="tables.html#65">container</a>,
+   *  but does not define anything to do with iterators.  Very few of the
+   *  other standard container interfaces are defined.
+   *
+   *  This is not a true container, but an @e adaptor.  It holds
+   *  another container, and provides a wrapper interface to that
+   *  container.  The wrapper is what enforces strict
+   *  first-in-last-out %stack behavior.
+   *
+   *  The second template parameter defines the type of the underlying
+   *  sequence/container.  It defaults to std::deque, but it can be
+   *  any type that supports @c back, @c push_back, and @c pop_back,
+   *  such as std::list, std::vector, or an appropriate user-defined
+   *  type.
+   *
+   *  Members not found in @a normal containers are @c container_type,
+   *  which is a typedef for the second Sequence parameter, and @c
+   *  push, @c pop, and @c top, which are standard %stack/FILO
+   *  operations.
+  */
+  template<typename _Tp, typename _Sequence = deque<_Tp> >
+    class stack
+    {
+		...
+	}
+```
+
+### how many containers in the STL?
+Since we are talking about containers, let's see how many containers are in the STL.
+#### Sequence Containers:  
+std::vector  - A dynamic array that provides fast random access to elements.
+std::deque  - A double-ended queue that supports fast insertion and deletion at both ends.
+std::list  - A doubly linked list that supports fast insertion and deletion at any position.
+std::array  - A fixed-size array that provides fast random access to elements.
+std::string (specialized container for characters)  
+#### Associative Containers  
+std::set - An ordered associative container that stores unique elements.
+std::multiset -  allows multiple elements to have the same value. It is similar to std::set, but unlike std::set, it allows for duplicate elements and they are sorted.
+std::map - stores key-value pairs in a sorted order based on the keys. The sorting is typically done using a binary search tree, such as a Red-Black Tree, which provides logarithmic time complexity for most operations.
+std::multimap - like map but allows for duplicate keys. Per key you access the values with dot notation.
+#### Unordered Associative Containers
+std::unordered_set - stores unique elements using a hash table.
+std::unordered_multiset - allows for duplicate elements and uses a hash table for storage.
+std::unordered_map - stores key-value pairs using a hash table.
+std::unordered_multimap - allows for duplicate keys and uses a hash table for storage.
+#### Container Adapters
+std::stack - provides a LIFO (Last-In-First-Out) stack interface.
+std::queue - provides a FIFO (First-In-First-Out) queue interface.
+std::priority_queue - provides a priority queue interface.
+
+##### A priority_queue 
+is a container adapter in the C++ Standard Template Library (STL) that provides constant time lookup of the largest (by default) element. It is typically implemented as a binary heap. The priority_queue is a type of container adapter that provides a restricted subset of the functionality of a queue. It is similar to a queue, but elements are popped based on their priority. The priority_queue is typically implemented as a binary heap, which allows for efficient insertion and removal of elements based on their priority.
+##### Common Operations:
+push: Adds an element to the priority queue.
+pop: Removes the highest priority element.
+top: Accesses the highest priority element.
+empty: Checks if the priority queue is empty.
+size: Returns the number of elements in the priority queue.
