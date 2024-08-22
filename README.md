@@ -208,6 +208,7 @@ std::vector<int> find_adjacent_differences(const std::vector<int>& numbers) {
 We can use the properties of the vector to create a span class which will contains an array of ints and return the largest and shortest spans between any value of the array.
 
 ## Ex02 - Mutantstack
+
 ### what is a stack container?
 The `std::stack` container in C++ is a simple data structure that follows the Last-In-First-Out (LIFO) principle. This means that the last element added to the stack is the first one to be removed. It's often used to implement functions like undo/redo, backtracking algorithms, or expression evaluation.  
 ### Key characteristics of std::stack:
@@ -278,7 +279,7 @@ The begin() and end() functions in the MutantStack class provide iterators that 
 - end(): Returns an iterator pointing to one past the last element of the stack.
 
 You can use these iterators in a loop to access and manipulate the elements of the stack
-The c_ref() function is used by the begin() and end() functions to access the underlying container and retrieve its iterators. By returning a reference to the container, the MutantStack class avoids making a copy of the container, which can be more efficient.
+The c_ref() function is used by the 	begin() and end() functions to access the underlying container and retrieve its iterators. By returning a reference to the container, the MutantStack class avoids making a copy of the container, which can be more efficient.
 
 This is the class definition in canonical form. Note that I have access to all stack methods and I can add new methods to the class. Also it is a template class so I can use it with any type of data.
 
@@ -298,4 +299,104 @@ class MutantStack: public std::stack<T> {
 	private:
 		typename std::stack<T>::container_type& c_ref();
 };
+```
+
+We use `typedef` in our class. 
+typedef - creates an alias that can be used anywhere in place of a (possibly complex) type name. Example:
+```cpp
+typedef int myInt;
+myInt x = 5;
+
+// the following two objects have the same type
+unsigned long l1;
+ulong l2;
+```	
+Structs with and without typedef
+
+```cpp
+typedef struct Node
+{
+    struct listNode* next; // declares a new (incomplete) struct type named listNode
+} listNode;
+```
+Here typedef struct Node { ... } listNode; creates an alias listNode for struct Node.  
+Node is the name of the structure type.  
+listNode is now an alias for struct Node.
+```cpp
+struct Node n1;
+listNode n2;
+```
+but without typedef it looks almost the same but:
+```cpp
+struct Node
+{
+	struct listNode* next; // declares a new (incomplete) struct type named listNode
+} listNode;
+```
+struct Node { ... } listNode; declares a structure type named Node and also declares a variable listNode of type struct Node.  
+Node is the name of the structure type.  
+listNode is a variable of type struct Node.  
+```cpp
+struct Node n1;
+struct Node n2;
+```
+Also you can use typedef to create an alias for an unnamed (anonymous) struct. 
+```cpp
+typedef struct
+{
+	int x;
+	int y;
+} Point;
+```
+Here typedef struct { ... } Point; creates an alias Point for an unnamed struct.
+
+## typedef typename
+I use `typedef typename`  to create an alias for a nested type within a template. It instructs the compiler that the following name is a type, not a value. Since I am using an alias for 
+`std::stack<T>::container_type::iterator` and my alias is `iterator`.
+This nested type path refers to the iterator type used within the `std::stack<T>::container`. 
+You will be surprised that actually the underlying container of the stack is a deque. 
+
+You can customize the container used by `std::stack` by providing a different container type as a template argument. For example, to use a `std::vector` instead of a `std::deque`:
+```cpp
+std::stack<int, std::vector<int>> myStack;
+```
+
+### The `std::stack` container adapter
+The `std::stack` container adapter is a simple wrapper around a container that provides a stack interface. The underlying container can be specified as a template parameter, but the default is `std::deque`.
+An example with both:
+```cpp
+#include <stack>
+#include <vector>
+#include <deque>
+#include <iostream>
+
+int main() {
+    // Default declaration using std::deque
+    std::stack<int> defaultStack;
+    defaultStack.push(1);
+    defaultStack.push(2);
+    defaultStack.push(3);
+
+    std::cout << "Default stack (using std::deque): ";
+    while (!defaultStack.empty()) {
+        std::cout << defaultStack.top() << " ";
+        defaultStack.pop();
+    }
+    std::cout << std::endl;
+
+    // Custom container declaration using std::vector
+    std::stack<int, std::vector<int>> vectorStack;
+    vectorStack.push(4);
+    vectorStack.push(5);
+    vectorStack.push(6);
+
+    std::cout << "Custom stack (using std::vector): ";
+    while (!vectorStack.empty()) {
+        std::cout << vectorStack.top() << " ";
+        vectorStack.pop();
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
 ```
